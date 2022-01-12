@@ -7,7 +7,7 @@
 {% block content %}
 
 <form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
+    {% csrf_token %}
     <div class="container">
         <h1>Регистрация </h1>
         <p>Заполниет форму для регистрации</p>

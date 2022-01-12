@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
+from .forms import *
 
 
 def home(request):
@@ -16,13 +16,13 @@ def categories(request):
 #     return render(request, 'goods/u_login.html')
 
 
-
 def basket(request):
     return render(request, 'goods/basket.html')
 
 
-def registration(request):
-    return render(request, 'goods/registration.html')
+#
+# def registration(request):
+#     return render(request, 'goods/registration.html')
 
 def user_login(request):
     if request.method == 'POST':
@@ -43,3 +43,14 @@ def user_login(request):
     return render(request, 'goods/u_login.html', {'form': form})
 
 
+def registration(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            return render(request, 'goods/register_done.html', {'new_user': new_user})
+    else:
+        user_form = UserRegistrationForm()
+    return render(request, 'goods/registration.html', {'user_form': user_form})
