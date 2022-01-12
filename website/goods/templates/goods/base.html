@@ -8,15 +8,17 @@
 <body>
 <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
     <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-        <span class="fs-4">Gooods</span>
+        <span class="fs-4"><b>GOOD's</b></span>
     </a>
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="me-3 py-2 text-dark text-decoration-none"><input type="search" name="q" placeholder="Поиск по сайту">
+        <a class="me-3 py-2 text-dark text-decoration-none">
+            <input type="text" class="search" placeholder="Поиск по сайту">
             <input type="submit" value="Найти"></a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="categories">категории</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="basket">корзина</a>
-        <a class="me-3 py-2 text-dark text-decoration-none" href="login">вход</a>
+
+        <a class="me-3 py-2 text-dark text-decoration-none" href="categories"><b>категории</b></a>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="basket"><b>корзина</b></a>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="login"><b>вход</b></a>
     </nav>
 </div>
 {% block content %}{% endblock %}
