@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
+from .forms import *
 
 
 def home(request):
@@ -12,17 +12,9 @@ def categories(request):
     return render(request, 'goods/cats.html')
 
 
-# def u_login(request):
-#     return render(request, 'goods/u_login.html')
-
-
-
 def basket(request):
     return render(request, 'goods/basket.html')
 
-
-def registration(request):
-    return render(request, 'goods/registration.html')
 
 def user_login(request):
     if request.method == 'POST':
@@ -43,3 +35,17 @@ def user_login(request):
     return render(request, 'goods/u_login.html', {'form': form})
 
 
+from .forms import SignUpForm
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user = form.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('login')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
