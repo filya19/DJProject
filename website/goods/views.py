@@ -2,14 +2,24 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import *
+from .models import *
+from django.utils import timezone
 
 
 def home(request):
-    return render(request, 'goods/home.html')
+    context = {}
+    limit = 10
+    posts = Post.objects.all()[:limit]
+
+    if not request.user.is_superuser:
+        posts = Post.objects.filter(is_draft=False, published_date__lte=timezone.now())[:limit]
+
+    context['posts'] = posts
+    return render(request, 'goods/home.html', context)
 
 
 def categories(request):
-    return render(request, 'goods/cats.html')
+    return render(request, 'goods/category.html')
 
 
 def basket(request):
@@ -37,6 +47,7 @@ def user_login(request):
 
 from .forms import SignUpForm
 
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -49,3 +60,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
+
+
+def post(request):
+    return render(request, 'goods/post.html')
