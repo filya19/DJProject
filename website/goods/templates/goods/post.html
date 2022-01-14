@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Gooods
+{% endblock %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<div class="row">
+    <div class="col-md-8">
+        <img src="{% static goods.image %}">
+    </div>
+    <div class="col-md-4">
+        <h5>описание:</h5>
+        <p>{{ post.description }}</p>
+        <br>
+        <h5> Контакты продавца: </h5>
+        <p> {{ post.phone }} </p>
+        <h5> Город: </h5>
+        <p> {{ post.city}} </p>
+        <h5> Опубликовано: </h5>
+        <p>{{ post.date }}</p>
+    </div>
+</div>
+{% endblock %}

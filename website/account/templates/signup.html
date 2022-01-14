@@ -1,0 +1,32 @@
+{% extends  'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+регистрация
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="container">
+        {% if user.is_authenticated %}
+        <p>Вы уже вошли в свой кабинет </p>
+        <a href="{% url 'logout' %}"  class="btn btn-primary btn-block">Выйти</a>
+        {%else%}
+        <h4 class="card-title">Регистрация</h4>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden"  name="next" value="{{ next }}">
+
+            {{ form|crispy }}
+
+            <button type="submit" class="btn btn-primary btn-block">Регистрация</button>
+            <a href="{% url 'login' %}" class="btn btn-primary btn-block">Войти</a>
+        </form>
+
+    </div>
+    {%endif%}
+</div>
+
+{% endblock %}
+
