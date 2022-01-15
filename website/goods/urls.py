@@ -1,10 +1,10 @@
 from django.urls import path
 from . import views
-from .views import Search
+from .views import Search, Postdetail
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('<int:pk>/', views.post, name="post"),
+    path('<str:slug>/', views.post, name="post"),
     path('categories', views.categories, name='category'),
     path('basket', views.basket, name="backet"),
     path('registration', views.signup, name='registration'),
