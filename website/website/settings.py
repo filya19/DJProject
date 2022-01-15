@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'goods.apps.GoodsConfig',
     'account.apps.AccountConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'mptt'
 ]
 
 
@@ -72,9 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'website.wsgi.application'
-
-# Database
+WSGI_APPLICATION = 'website.wsgi.application'# Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {

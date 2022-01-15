@@ -13,9 +13,11 @@
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 text-dark text-decoration-none">
-            <input type="text" class="search" placeholder="Поиск по сайту">
-            <input type="submit" value="Найти"></a>
-
+            <form action =" {%url 'search' %}" method="get">
+                <input type="text" name="s" placeholder="Поиск по сайту">
+                <input type="submit" value="Найти">
+            </form>
+        </a>
         <a class="btn" href="categories"><b>категории</b></a>
         <a class="btn" href="basket"><b>корзина</b></a>
         <a class="btn" href="u_login"><b>вход</b></a>

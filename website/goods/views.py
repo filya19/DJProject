@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.views.generic import ListView
+
 from .forms import *
 from .models import *
 from django.utils import timezone
@@ -19,6 +21,9 @@ def home(request):
 
 
 def categories(request):
+    context = {
+        'categories': Category.objects.all()
+    }
     return render(request, 'goods/category.html')
 
 
@@ -64,3 +69,16 @@ def signup(request):
 
 def post(request):
     return render(request, 'goods/post.html')
+
+
+class Search(ListView):
+    template_name = 'search/search.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+    def get_queryset(self):
+        return Post.objects.filter(title__icontains=self.request.GET.get('s'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = f"s={self.request.GET.get('s')}&"
+        return context

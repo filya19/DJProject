@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import Search
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('registration', views.signup, name='registration'),
     path('u_login', views.user_login, name='login'),
     path('post', views.post, name='post'),
+    path('search',Search.as_view(),name = 'search')
 ]
