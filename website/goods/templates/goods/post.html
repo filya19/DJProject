@@ -11,14 +11,16 @@ Gooods
         &nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static post.image %} " style="width:20vw;height:40vh">
     </div>
     <div class="col-md-4">
-        <h5>описание:</h5>
+        <h4>описание:</h4>
         <p>{{ post.description }}</p>
         <br>
-        <h5> Контакты продавца: </h5>
+        <h6> Контакты продавца: </h6>
         <p> {{ post.phone }} </p>
-        <h5> Город: </h5>
+        <h6> Цена:  </h6>
+        <p>{{ post.price }} {{ post.currency }}</p>
+        <h6> Город: </h6>
         <p> {{ post.city}} </p>
-        <h5> Опубликовано: </h5>
+        <h6> Опубликовано: </h6>
         <p>{{ post.created_on }}</p>
     </div>
 </div>

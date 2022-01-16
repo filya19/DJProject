@@ -11,5 +11,6 @@ urlpatterns = [
     path('registration', views.signup, name='registration'),
     path('u_login', views.user_login, name='login'),
     path('post', views.post, name='post'),
-    path('search',Search.as_view(),name = 'search')
+    path('search', Search.as_view(), name='search'),
+
 ]

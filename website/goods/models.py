@@ -38,6 +38,12 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
+    CURRENCY = (
+        ('BYN', 'BYN'),
+        ('DOLL', 'DOLL'),
+        ('EURO', 'EURO')
+    )
+
     CITY = (
         ("Минск", "Минск"),
         ("Брест", "Брест"),
@@ -58,7 +64,8 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     phone = models.CharField(blank=True, max_length=100, verbose_name='Контактный номер')
     city = models.CharField(max_length=10, choices=CITY, default='', verbose_name='Город')
-    price = models.IntegerField(default=0, verbose_name='Цена(BYN,руб)')
+    price = models.IntegerField(default=0)
+    currency = models.CharField(max_length=10, choices=CURRENCY, default='BYN')
 
     def __str__(self):
         return self.title
