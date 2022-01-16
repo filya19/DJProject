@@ -19,3 +19,35 @@ class SignUpForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label=u'Имя пользователя')
     password = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
+
+
+class PostCreateForm(forms.Form):
+    author = forms.CharField(
+        max_length=60,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ваше имя"
+        })
+    )
+    body = forms.CharField(widget=forms.Textarea(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Оставьте комментарий"
+        })
+    )
+
+
+class CommentForm(forms.Form):
+    author = forms.CharField(
+        max_length=60,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Ваше имя"
+        })
+    )
+    body = forms.CharField(widget=forms.Textarea(
+        attrs={
+            "class": "form-control",
+            "placeholder": "Оставьте комментарий"
+        })
+    )
