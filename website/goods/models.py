@@ -52,7 +52,7 @@ class Post(models.Model):
     category = TreeForeignKey("Category", related_name='category', null=True, on_delete=models.CASCADE,
                               verbose_name='Категория')
     description = models.TextField(max_length=400, verbose_name='Описание')
-    image = models.ImageField(upload_to='img/', verbose_name='Изображение',blank=True)
+    image = models.ImageField(upload_to='img/', verbose_name='Изображение', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
