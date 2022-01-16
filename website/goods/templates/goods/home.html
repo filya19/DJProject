@@ -5,12 +5,17 @@ GOOD's
 {% endblock %}
 
 {% block content %}
-<h1> Последние объявления </h1>
+<h3> Последние объявления </h3>
 <div class="row">
-{% for post in posts %}
+    {% for post in posts %}
     <div class="col-md-4">
         <div class="card mb-2">
-            <img class="card-img-top" src="{% static post.image.url %} " style="width:33vw;height:60vh">
+            {% if post.image %}
+            <img class="card-img-top" src="{% static post.image %} " style="width:31,5vw;height:60vh">
+            {% else %}
+            <img src="https://dvmn.org/filer/canonical/1569944855/354/" class="card-img-top" alt="..."
+                 style="width:31,5vw;height:60vh">
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }}</h5>
                 <p class="card-text">{{ post.description }}</p>
