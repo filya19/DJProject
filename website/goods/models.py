@@ -1,4 +1,3 @@
-import mptt
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -8,7 +7,6 @@ from mptt.models import MPTTModel
 
 
 class Category(MPTTModel):
-    """Категории объявлений"""
     name = models.CharField("Имя", max_length=50, unique=True)
     ordering = ('tree_id', 'level')
     parent = TreeForeignKey(
@@ -31,8 +29,8 @@ class Category(MPTTModel):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-
-mptt.register(Category, order_insertion_by=['name'])
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'slug': self.slug})
 
 
 class Post(models.Model):
@@ -48,18 +46,19 @@ class Post(models.Model):
         ("Витебск", "Витебск"),
         ("Могилев", "Могилев"),
     )
-    author = models.ForeignKey(User, null=True, related_name='posts', on_delete=models.CASCADE)
-    title = models.CharField(blank=True, max_length=100)
+    author = models.ForeignKey(User, null=True, related_name='posts', on_delete=models.CASCADE, verbose_name='Автор')
+    title = models.CharField(blank=True, max_length=100, verbose_name='Тема')
     slug = models.SlugField(max_length=255, unique=False, default=None, verbose_name="URL")
-    description = models.TextField(max_length=400)
-    image = models.ImageField(upload_to='img/goods')
-    publish = models.DateTimeField(default=timezone.now)
-    date = models.DateField(null=True, auto_now_add="True")
+    category = TreeForeignKey("Category", related_name='category', null=True, on_delete=models.CASCADE,
+                              verbose_name='Категория')
+    description = models.TextField(max_length=400, verbose_name='Описание')
+    image = models.ImageField(upload_to='img/', verbose_name='Изображение',blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-    phone = models.CharField(blank=True, max_length=100)
-    city = models.CharField(max_length=10, choices=CITY, default='')
-    category = TreeForeignKey("Category", related_name='category', null=True, on_delete=models.CASCADE)
-
+    phone = models.CharField(blank=True, max_length=100, verbose_name='Контактный номер')
+    city = models.CharField(max_length=10, choices=CITY, default='', verbose_name='Город')
+    price = models.IntegerField(default=0, verbose_name='Цена(BYN,руб)')
 
     def __str__(self):
         return self.title
@@ -71,17 +70,12 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post', kwargs={'id': self.id, 'title': self.title})
 
-    # def image_img(self):
-    #     if self.image:
-    #         return u'<a href ='0''
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author_name = models.CharField(blank=True, max_length=50)
-    text = models.TextField(max_length=200)
-
-    def __str__(self):
-        return self.author_name
+    author = models.CharField(max_length=60)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Комментарий'

@@ -8,7 +8,7 @@ Gooods
 <h1>{{ post.title }}</h1>
 <div class="row">
     <div class="col-md-8">
-        <img src="{% static post.image.url %}">
+        &nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static post.image %} " style="width:60vw;height:120vh">
     </div>
     <div class="col-md-4">
         <h5>описание:</h5>
@@ -19,7 +19,28 @@ Gooods
         <h5> Город: </h5>
         <p> {{ post.city}} </p>
         <h5> Опубликовано: </h5>
-        <p>{{ post.date }}</p>
+        <p>{{ post.created_on }}</p>
     </div>
 </div>
+<br><br><br>
+<h3>Оставьте комментарий:</h3>
+    <form action="/{{ post.slug }}/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.author }}
+        </div>
+        <div class="form-group">
+            {{ form.body }}
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+    <h3>Комментарии:</h3>
+    {% for comment in comments %}
+    <p>
+        On {{comment.created_on.date }}&nbsp;
+        <b>{{ comment.author }}</b> wrote:
+    </p>
+    <p>{{ comment.body }}</p>
+    <hr>
+    {% endfor %}
 {% endblock %}
