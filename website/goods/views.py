@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.views.generic import ListView, DetailView
+
 from .forms import *
 from .models import *
 from django.utils import timezone
@@ -19,6 +21,9 @@ def home(request):
 
 
 def categories(request):
+    context = {
+        'categories': Category.objects.all()
+    }
     return render(request, 'goods/category.html')
 
 
@@ -62,5 +67,42 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-def post(request):
-    return render(request, 'goods/post.html')
+def post(request, slug):
+    post = Post.objects.get(slug=slug)
+    context = {
+        'post': post
+    }
+    return render(request, 'goods/post.html', context)
+
+
+class Search(ListView):
+    template_name = 'search/search.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return Post.objects.filter(title__icontains=self.request.GET.get('s'))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = f"s={self.request.GET.get('s')}&"
+        return context
+
+
+def post_detail(request, slug):
+    post = Post.objects.get(slug=slug)
+    context = {
+        'post': post
+    }
+    return render(request, 'post_detail.html', context)
+
+
+class Postdetail(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+    context_object_name = 'post'
+
+    def get_context_data(self, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = Category.objects.get(slug=self.kwargs['slug'])
+        return context
