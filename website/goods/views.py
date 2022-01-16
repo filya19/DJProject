@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import *
 from .models import *
@@ -12,10 +12,6 @@ def home(request):
     context = {}
     limit = 10
     posts = Post.objects.all()[:limit]
-
-    if not request.user.is_superuser:
-        posts = Post.objects.filter(is_draft=False, published_date__lte=timezone.now())[:limit]
-
     context['posts'] = posts
     return render(request, 'goods/home.html', context)
 
@@ -50,9 +46,6 @@ def user_login(request):
     return render(request, 'goods/u_login.html', {'form': form})
 
 
-from .forms import SignUpForm
-
-
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -69,8 +62,22 @@ def signup(request):
 
 def post(request, slug):
     post = Post.objects.get(slug=slug)
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = Comment(
+                author=form.cleaned_data["author"],
+                body=form.cleaned_data["body"],
+                post=post
+            )
+            comment.save()
+
+    comments = Comment.objects.filter(post=post)
     context = {
-        'post': post
+        "post": post,
+        "comments": comments,
+        "form": form,
     }
     return render(request, 'goods/post.html', context)
 
@@ -106,3 +113,21 @@ class Postdetail(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = Category.objects.get(slug=self.kwargs['slug'])
         return context
+
+class PostsByCategory(ListView):
+    template_name = 'goods/home.html'
+    context_object_name = 'posts'
+    allow_empty = True
+
+    def get_queryset(self):
+        return Post.objects.filter(category_slug = self.kwargs['slug'])
+
+    def get_context_data(self, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = Category.objects.get(slug=self.kwargs['slug'])
+        return context
+
+class PostCreateNew(CreateView):
+    model = Post
+    template_name = 'createpost.html'
+    fields = ['title','category','description','phone','image','city']
