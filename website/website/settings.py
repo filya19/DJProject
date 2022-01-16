@@ -39,10 +39,9 @@ INSTALLED_APPS = [
     'goods.apps.GoodsConfig',
     'account.apps.AccountConfig',
     'crispy_forms',
-    'mptt'
+    'mptt',
+
 ]
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'website.wsgi.application'# Database
+WSGI_APPLICATION = 'website.wsgi.application'  # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
@@ -129,3 +128,5 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
+
+LOGIN_REDIRECT_URL = '/'
