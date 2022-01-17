@@ -60,8 +60,8 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-def post(request, slug):
-    post = Post.objects.get(slug=slug)
+def post(request, pk):
+    post = Post.objects.get(pk=pk)
     form = CommentForm()
     if request.method == 'POST':
         form = CommentForm(request.POST)

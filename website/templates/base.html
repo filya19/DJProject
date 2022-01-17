@@ -18,13 +18,14 @@
                 <input type="submit" value="Найти">
             </form>
         </a>
-        <a class="btn" href="categories"><b>категории</b></a>
-        <a class="btn" href="basket"><b>корзина</b></a>
+        <a class="btn" href="{% url 'category' %}"><b>категории</b></a>
+        <a class="btn" href="{% url 'backet' %}"><b>корзина</b></a>
 
-        {% if user.is_authenticated %}
-        <a class="btn" href="{% url 'logout' %}" ><b>выйти</b></a>
+        {% if not user.is_active%}
+        <a class="btn" href="{% url 'login' %}"><b>профиль{{author}}</b></a>
+        <a class="btn" href="{% url 'logout' %}"><b>выйти</b></a>
         {% else %}
-        <a class="btn" href="u_login "><b>вход</b></a>
+        <a class="btn" href="{% url 'u_login' %} "><b>вход</b></a>
         {% endif %}
 
     </nav>
