@@ -21,6 +21,7 @@
         <a class="btn" href="{% url 'category' %}"><b>категории</b></a>
         <a class="btn" href="{% url 'backet' %}"><b>корзина</b></a>
 
+
         {% if not user.is_active%}
         <a class="btn" href="{% url 'login' %}"><b>профиль{{author}}</b></a>
         <a class="btn" href="{% url 'logout' %}"><b>выйти</b></a>

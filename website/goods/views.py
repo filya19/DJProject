@@ -131,3 +131,4 @@ class PostCreateNew(CreateView):
     model = Post
     template_name = 'createpost.html'
     fields = ['title','category','description','phone','image','city']
+
