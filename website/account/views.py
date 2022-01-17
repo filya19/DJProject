@@ -18,9 +18,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic import DetailView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
-from django.contrib.auth import logout
+# from django.contrib.auth import logout
+# from rest_framework import generics, permissions
+from .models import Profile
+# from .serializers import ProfileSer, ProfileUpdateSer, AvatarUpdateSer
 
 UserModel = get_user_model()
 
@@ -333,4 +337,11 @@ def redirect_to_login(next, login_url=None, redirect_field_name=REDIRECT_FIELD_N
 #     @method_decorator(login_required)
 #     def dispatch(self, *args, **kwargs):
 #         return super().dispatch(*args, **kwargs)
+
+
+
+class ProfileDetail(DetailView):
+    model = Profile
+    context_object_name = "profile"
+    template_name = 'account/login.html'
 
