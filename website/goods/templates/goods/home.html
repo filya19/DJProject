@@ -8,6 +8,7 @@ GOOD's
 <h3> Последние объявления </h3>
 <div class="row">
     {% for post in posts %}
+    {% if post.status == 'published' %}
     <div class="col-md-4">
         <div class="card mb-2">
             {% if post.image %}
@@ -36,6 +37,7 @@ GOOD's
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}
