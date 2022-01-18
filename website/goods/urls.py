@@ -1,15 +1,15 @@
 from django.urls import path
 from . import views
-from .views import Search, PostCreateNew
+from .views import Search
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('<int:pk>/', views.post, name="post"),
+    path('addpost/', views.addpost, name='add_post'),
     path('categories/', views.categories, name='category'),
-    path('basket/', views.basket, name="backet"),
+    path('basket/', views.basket, name="basket"),
     path('registration/', views.signup, name='registration'),
-    path('u_login/', views.user_login, name='u_login'),
     path('post/', views.post, name='post'),
     path('search/', Search.as_view(), name='search'),
-
+    path('profile/', views.profile, name='profile')
 ]

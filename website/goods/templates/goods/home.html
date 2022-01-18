@@ -8,6 +8,7 @@ GOOD's
 <h3> Последние объявления </h3>
 <div class="row">
     {% for post in posts %}
+    {% if post.status == 'published' %}
     <div class="col-md-4">
         <div class="card mb-2">
             {% if post.image %}
@@ -18,6 +19,16 @@ GOOD's
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ post.title }}</h5>
+            <small>
+                {{ post.created_on.date }} |&nbsp;
+                Категории:&nbsp;
+                {{ post.category }}
+                {% for i in posts.category.all %}
+                <a href="{% url 'category' i.name %}">
+                    {{ i.name }}
+                </a>&nbsp;
+                {% endfor %}
+            </small>
                 <p class="card-text">{{ post.description }}</p>
                 <a href="{% url 'post' post.pk %}"
                    class="btn btn-primary">
@@ -26,6 +37,7 @@ GOOD's
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+GOOD's
+{% endblock %}
+
+{% block content %}
+<h3>Добро пожаловать {{ profile.first_name }}</h3>
+<a class="btn" href="{% url 'add_post' %}"><h4> Создать объявление</h4></a>
+<h5> аватар: </h5>
+{% if profile.avatar %}
+<p><img src="{{ profile.avatar.url }}"></p>
+{% endif %}
+<h5> Почта: </h5>
+<p>{{ profile.email_two }}</p>
+<h5> телефон: </h5>
+<p>{{ profile.phone }}</p>
+<h5> Имя: </h5>
+<p>{{ profile.first_name }}</p>
+<h5> Фамилия: </h5>
+<p>{{ profile.last_name }}</p>
+{% endblock %}

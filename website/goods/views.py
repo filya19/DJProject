@@ -1,6 +1,10 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import *
@@ -18,33 +22,28 @@ def home(request):
 
 def categories(request):
     context = {
-        'categories': Category.objects.all()
+        'categories': Category.objects.all(),
+        'children':Category.objects.all,
     }
-    return render(request, 'goods/category.html')
+    return render(request, 'goods/category.html', context)
 
 
 def basket(request):
     return render(request, 'goods/basket.html')
 
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(username=cd['username'], password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('Authenticated successfully')
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Invalid login')
-    else:
-        form = LoginForm()
-    return render(request, 'goods/u_login.html', {'form': form})
-
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             user = authenticate(username=cd['username'], password=cd['password'])
+#             if user is not None:
+#                 if user.is_active:
+#                     login(request, user)
+#     else:
+#         form = LoginForm(request.POST)
+#     return render(request, 'goods/u_login.html', {'form': form})
 
 def signup(request):
     if request.method == 'POST':
@@ -54,7 +53,7 @@ def signup(request):
             user.refresh_from_db()  # load the profile instance created by the signal
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('login')
+            return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
@@ -88,7 +87,8 @@ class Search(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.filter(title__icontains=self.request.GET.get('s'))
+        return Post.objects.filter(
+            Q(title__icontains=self.request.GET.get('s')))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,39 +96,55 @@ class Search(ListView):
         return context
 
 
-def post_detail(request, slug):
-    post = Post.objects.get(slug=slug)
-    context = {
-        'post': post
-    }
-    return render(request, 'post_detail.html', context)
-
-
-class Postdetail(DetailView):
-    model = Post
-    template_name = 'post_detail.html'
-    context_object_name = 'post'
-
-    def get_context_data(self, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = Category.objects.get(slug=self.kwargs['slug'])
-        return context
-
 class PostsByCategory(ListView):
     template_name = 'goods/home.html'
     context_object_name = 'posts'
     allow_empty = True
 
     def get_queryset(self):
-        return Post.objects.filter(category_slug = self.kwargs['slug'])
+        return Post.objects.filter(category_slug=self.kwargs['slug'])
 
     def get_context_data(self, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = Category.objects.get(slug=self.kwargs['slug'])
         return context
 
-class PostCreateNew(CreateView):
-    model = Post
-    template_name = 'createpost.html'
-    fields = ['title','category','description','phone','image','city']
 
+class AddPage(LoginRequiredMixin, CreateView):
+    form_class = PostCreateForm
+    template_name = 'goods/createpost.html'
+    success_url = reverse_lazy('home')
+    login_url = reverse_lazy('home')
+    raise_exception = True
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     c_def = self.get_user_context(title="Добавление статьи")
+    #     return dict(list(context.items()) + list(c_def.items()))
+
+
+def addpost(request):
+    if request.method == 'POST':
+        form = PostCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=True)
+            post.author = request.user
+            form.save()
+            return redirect('home')
+    else:
+        form = PostCreateForm()
+    return render(request, 'goods/createpost.html', {'form': form})
+
+
+def profile(request):
+    # profile = User.objects.POST.get(pk=pk)
+    # context = {
+    #     'profile': profile,
+    #
+    # }
+    return render(request, 'goods/profile.html')
+
+# class ProfileDetail(DetailView):
+#     model = Profile
+#     context_object_name = 'profile'
+#     template_name = 'goods/profile.html'

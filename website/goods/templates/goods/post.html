@@ -8,41 +8,54 @@ Gooods
 <h1>{{ post.title }}</h1>
 <div class="row">
     <div class="col-md-8">
-        &nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static post.image %} " style="width:20vw;height:40vh">
+        {% if post.image %}
+        <img class="card-img-top" src="{% static post.image %} "
+                                     style="width:60vw;height:120vh">
+        {% else %}
+        <img src="https://dvmn.org/filer/canonical/1569944855/354/" class="card-img-top"
+                                     alt="..."
+                                     style="width:60vw;height:120vh">
+        {% endif %}
     </div>
     <div class="col-md-4">
-        <h4>описание:</h4>
+        <h5>Автор:</h5>
+        <p>{{ post.author }}</p>
+        <h5>Категория:</h5>
+        <p>{{ post.category }}</p>
+        <h5>Описание:</h5>
         <p>{{ post.description }}</p>
+        <h5> Цена: </h5>
+        <p>{{ post.price }} руб.</p>
         <br>
-        <h6> Контакты продавца: </h6>
+        <h5> Контакты продавца: </h5>
         <p> {{ post.phone }} </p>
-        <h6> Цена:  </h6>
-        <p>{{ post.price }} {{ post.currency }}</p>
-        <h6> Город: </h6>
+        <br>
+        <h5> Город: </h5>
         <p> {{ post.city}} </p>
-        <h6> Опубликовано: </h6>
+        <br>
+        <h5> Опубликовано: </h5>
         <p>{{ post.created_on }}</p>
     </div>
 </div>
 <br><br><br>
 <h3>Оставьте комментарий:</h3>
-    <form action="/{{ post.slug }}/" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.author }}
-        </div>
-        <div class="form-group" >
-            {{ form.body }}
-        </div>
-        <button type="submit" class="btn btn-primary">Отправить</button>
-    </form>
-    <h3>Комментарии:</h3>
-    {% for comment in comments %}
-    <p>
-        On {{comment.created_on.date }}&nbsp;
-        <b>{{ comment.author }}</b> wrote:
-    </p>
-    <p>{{ comment.body }}</p>
-    <hr>
-    {% endfor %}
+<form action="/{{ post.slug }}/" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.author }}
+    </div>
+    <div class="form-group">
+        {{ form.body }}
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+<h3>Комментарии:</h3>
+{% for comment in comments %}
+<p>
+    On {{comment.created_on.date }}&nbsp;
+    <b>{{ comment.author }}</b> wrote:
+</p>
+<p>{{ comment.body }}</p>
+<hr>
+{% endfor %}
 {% endblock %}
