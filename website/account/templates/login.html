@@ -1,11 +1,32 @@
-{% extends  'base.html' %}
-{% load crispy_forms_tags %}
+{% extends "base.html" %}
 
 {% block title %}
-
+login
 {% endblock %}
 
 {% block content %}
-<h2><b>Здесь будет страница пользователя!!!</b></h2>
+<form action="{% url 'login'%}" method="post">
+    {% csrf_token %}
+    <div class="container">
+        <h1> Авторизация </h1>
+        <p> Выполните вход </p>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-error">{{ form.non_field_errors }}</div>
+
+            {% for f in form %}
+            <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+            <div class="form-error">{{ f.errors }}</div>
+            {% endfor %}
+
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+    <div class="container signin"><br>
+        <p>У Вас нет аккаунта? <a href="{% url 'registration' %}"> ЗАРЕГИСТРИРОВАТЬСЯ </a></p>
+    </div>
+</form>
 
 {% endblock %}

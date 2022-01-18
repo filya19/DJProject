@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from .models import Post
+
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=32, help_text='Введите логин', label='Логин')
@@ -16,25 +18,24 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(label=u'Имя пользователя')
-    password = forms.CharField(label=u'Пароль', widget=forms.PasswordInput())
+class PostCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].empty_label = "Категория не выбрана"
 
+    class Meta:
+        model = Post
+        fields = ['title', 'description', 'category', 'image', 'status', 'phone', 'city', 'price']
+        widgets = {
+            'author':forms.HiddenInput(),
+            'title': forms.TextInput(attrs={'class': 'form-input'}),
+            'description': forms.Textarea(attrs={'cols': 60, 'rows': 10}),
 
-class PostCreateForm(forms.Form):
-    author = forms.CharField(
-        max_length=60,
-        widget=forms.TextInput(attrs={
-            "class": "form-control",
-            "placeholder": "Ваше имя"
-        })
-    )
-    body = forms.CharField(widget=forms.Textarea(
-        attrs={
-            "class": "form-control",
-            "placeholder": "Оставьте комментарий"
-        })
-    )
+        }
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(PostCreateForm, self).form_valid(form)
 
 
 class CommentForm(forms.Form):
