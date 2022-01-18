@@ -52,7 +52,7 @@ class Post(models.Model):
     category = TreeForeignKey("Category", related_name='category', null=True, on_delete=models.CASCADE,
                               verbose_name='Категория')
     description = models.TextField(max_length=400, verbose_name='Описание')
-    image = models.ImageField(upload_to='img/', verbose_name='Изображение',blank=True)
+    image = models.ImageField(upload_to='img/', verbose_name='Изображение', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
@@ -66,9 +66,7 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
-
-    def get_absolute_url(self):
-        return reverse('post', kwargs={'id': self.id, 'title': self.title})
+        ordering = ['-created_on']
 
 
 class Comment(models.Model):
@@ -80,3 +78,4 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+        ordering = ['-created_on']
