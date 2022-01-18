@@ -22,7 +22,8 @@ def home(request):
 
 def categories(request):
     context = {
-        'categories': Category.objects.all()
+        'categories': Category.objects.all(),
+        'children':Category.objects.all,
     }
     return render(request, 'goods/category.html', context)
 
@@ -109,13 +110,41 @@ class PostsByCategory(ListView):
         return context
 
 
-# class PostCreateNew(LoginRequiredMixin,CreateView):
-#     model = Post
-#     form_class =
-#     template_name = 'createpost.html'
-#     success_url = reverse_lazy('home')
-#     login_url =reverse_lazy ('login')
-#     raise_exception = True
-#     fields = ['title', 'category', 'description', 'phone', 'image', 'city']
+class AddPage(LoginRequiredMixin, CreateView):
+    form_class = PostCreateForm
+    template_name = 'goods/createpost.html'
+    success_url = reverse_lazy('home')
+    login_url = reverse_lazy('home')
+    raise_exception = True
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     c_def = self.get_user_context(title="Добавление статьи")
+    #     return dict(list(context.items()) + list(c_def.items()))
 
 
+def addpost(request):
+    if request.method == 'POST':
+        form = PostCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=True)
+            post.author = request.user
+            form.save()
+            return redirect('home')
+    else:
+        form = PostCreateForm()
+    return render(request, 'goods/createpost.html', {'form': form})
+
+
+def profile(request):
+    # profile = User.objects.POST.get(pk=pk)
+    # context = {
+    #     'profile': profile,
+    #
+    # }
+    return render(request, 'goods/profile.html')
+
+# class ProfileDetail(DetailView):
+#     model = Profile
+#     context_object_name = 'profile'
+#     template_name = 'goods/profile.html'
